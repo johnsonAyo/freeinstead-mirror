@@ -61,8 +61,8 @@ jobs:
           PAGES_URL: ${{ steps.pages.outputs.page_url }}
           MIRROR_DIGEST: ${{ inputs.mirror_digest }}
         run: |
-          for attempt in {1..6}; do
-            actual="$(curl -fsS --max-time 7 "${PAGES_URL%/}/release.json" | jq -r .digest)" || actual=
+          for attempt in {1..24}; do
+            actual="$(curl -fsS --max-time 7 "${PAGES_URL%/}/release.json?release=${MIRROR_DIGEST}" | jq -r .digest)" || actual=
             if test "$actual" = "$MIRROR_DIGEST"; then exit 0; fi
             sleep 5
           done
